@@ -6,30 +6,30 @@ import (
 	"testing"
 )
 
-func TestExtractTxid(t *testing.T) {
+func TestExtractRequestID(t *testing.T) {
 	txid := "abc"
-	ctx := WithTxid(context.Background(), txid)
-	txid2 := ExtractTxid(ctx)
+	ctx := WithRequestID(context.Background(), txid)
+	txid2 := ExtractRequestID(ctx)
 	if txid2 != txid {
 		t.Fatalf("expected txid %v, got %v", txid, txid2)
 	}
 
-	txid = ExtractTxid(context.Background())
+	txid = ExtractRequestID(context.Background())
 	if txid != "" {
 		t.Fatalf("expected empty txid, got %v", txid)
 	}
 
 	// wrong type (not string)
-	ctx = context.WithValue(context.Background(), keyTxid, 42)
-	txid = ExtractTxid(ctx)
+	ctx = context.WithValue(context.Background(), keyRequestID, 42)
+	txid = ExtractRequestID(ctx)
 	if txid != "" {
 		t.Fatalf("expected empty txid for wrong type, got %v (%[1]T)", txid)
 	}
 }
 
-func TestWithNewRandomTxid(t *testing.T) {
-	ctx := WithNewRandomTxid(context.Background())
-	txid := ExtractTxid(ctx)
+func TestWithNewRandomRequestID(t *testing.T) {
+	ctx := WithNewRandomRequestID(context.Background())
+	txid := ExtractRequestID(ctx)
 	ok, err := regexp.MatchString(
 		`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`,
 		txid,
